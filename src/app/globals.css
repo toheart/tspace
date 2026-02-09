@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050508;
+  --foreground: #e4e4e7;
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --accent-cyan: #22d3ee;
+  --card-bg: #0c0c10;
+  --card-border: #1a1a2e;
+  --muted: #71717a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 锚点偏移，避免固定导航栏遮挡 */
+section[id] {
+  scroll-margin-top: 80px;
+}
+footer[id] {
+  scroll-margin-top: 80px;
+}
+
+/* 选中文字颜色 */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #fff;
+}
+
+/* ===== 扫描线效果 ===== */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.scanline::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.15), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* ===== 渐变边框光效 ===== */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes border-rotate {
+  to { --border-angle: 360deg; }
+}
+
+.glow-border {
+  --border-angle: 0deg;
+  border: 1px solid transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-image:
+    linear-gradient(var(--card-bg), var(--card-bg)),
+    conic-gradient(from var(--border-angle), transparent 40%, rgba(59,130,246,0.4) 50%, rgba(34,211,238,0.3) 55%, transparent 60%);
+  animation: border-rotate 6s linear infinite;
+}
+
+.glow-border:hover {
+  background-image:
+    linear-gradient(var(--card-bg), var(--card-bg)),
+    conic-gradient(from var(--border-angle), transparent 30%, rgba(59,130,246,0.6) 45%, rgba(34,211,238,0.5) 55%, transparent 65%);
+}
+
+/* ===== 区域分隔线 ===== */
+.section-divider {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.15) 20%, rgba(34,211,238,0.1) 50%, rgba(59,130,246,0.15) 80%, transparent);
+}
+
+.section-divider::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  background: radial-gradient(ellipse at center, rgba(59,130,246,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ===== 噪点纹理覆盖 ===== */
+.noise-overlay::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ===== 核心技能标签高亮 ===== */
+.tag-primary {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+  font-weight: 500;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.08);
+}
+
+.tag-primary:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
 }
